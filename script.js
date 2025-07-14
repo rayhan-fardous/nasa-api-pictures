@@ -12,7 +12,7 @@ const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}&count=${co
 let resultArray = [];
 let favorites = {};
 
-function updateDOM() {
+function createDOMNodes() {
   resultArray.forEach((result) => {
     // Card container
     const card = document.createElement("div");
@@ -61,6 +61,10 @@ function updateDOM() {
     card.append(link, cardBody);
     imageContainer.appendChild(card);
   });
+}
+
+function updateDOM() {
+  createDOMNodes();
 }
 
 // Get 10 Images from Nasa API
