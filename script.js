@@ -13,7 +13,8 @@ let resultArray = [];
 let favorites = {};
 
 function createDOMNodes(page) {
-  const currentArray = page === 'results' ? resultArray : Object.values(favorites);
+  const currentArray =
+    page === "results" ? resultArray : Object.values(favorites);
   currentArray.forEach((result) => {
     // Card container
     const card = document.createElement("div");
@@ -39,8 +40,13 @@ function createDOMNodes(page) {
     // Save Text
     const saveText = document.createElement("p");
     saveText.classList.add("clickable");
-    saveText.textContent = "Add to Favorites";
-    saveText.setAttribute("onclick", `savefavorite('${result.url}')`);
+    if (page === "results") {
+      saveText.textContent = "Add to Favorites";
+      saveText.setAttribute("onclick", `savefavorite('${result.url}')`);
+    } else {
+      saveText.textContent = "Remove Favorites";
+      saveText.setAttribute("onclick", `removefavorite('${result.url}')`);
+    }
     // Card Text
     const cardText = document.createElement("p");
     cardText.textContent = result.explanation;
@@ -66,10 +72,10 @@ function createDOMNodes(page) {
 
 function updateDOM(page) {
   // Get favorites fromlocal storage
-  if (localStorage.getItem('nasaFavorites')) {
-    favorites = JSON.parse(localStorage.getItem('nasaFavorites'));
-
+  if (localStorage.getItem("nasaFavorites")) {
+    favorites = JSON.parse(localStorage.getItem("nasaFavorites"));
   }
+  imageContainer.textContent = '';
   createDOMNodes(page);
 }
 
@@ -79,7 +85,7 @@ async function getNasaPictures() {
     const response = await fetch(apiUrl);
     resultArray = await response.json();
     console.log(resultArray);
-    updateDOM('favorites');
+    updateDOM("favorites");
   } catch (error) {
     // Catch Error Here
   }
@@ -97,9 +103,19 @@ function savefavorite(itemUrl) {
         saveConfirmed.hidden = true;
       }, 2000);
       // Set Favorites in localstorage
-      localStorage.setItem('nasaFavorites', JSON.stringify(favorites));
+      localStorage.setItem("nasaFavorites", JSON.stringify(favorites));
     }
   });
+}
+
+// Remove Item from favorites
+function removefavorite(itemUrl) {
+  if (favorites[itemUrl]) {
+    delete favorites[itemUrl];
+    // Set Favorites in localstorage
+    localStorage.setItem("nasaFavorites", JSON.stringify(favorites));
+    updateDOM('favorites');
+  }
 }
 
 // On Load
