@@ -1,4 +1,3 @@
-
 # NASA API Pictures
 
 A simple web application that fetches and displays pictures from NASA's Astronomy Picture of the Day (APOD) API.
